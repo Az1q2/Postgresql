@@ -16,3 +16,11 @@ CREATE TABLE sellers (
     description TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- 3. Категории (иерархия: список смежности)
+CREATE TABLE categories (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    parent_id BIGINT REFERENCES categories(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    name TEXT NOT NULL UNIQUE,
+    CONSTRAINT chk_category_not_self_parent CHECK (parent_id IS NULL OR parent_id <> id)
+);
