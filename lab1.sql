@@ -68,3 +68,13 @@ CREATE TABLE addresses (
     house TEXT NOT NULL,
     apartment TEXT
 );
+
+-- 9. Заказы
+CREATE TABLE orders (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'paid', 'shipped', 'delivered', 'cancelled')),
+    total_amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (total_amount >= 0),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
