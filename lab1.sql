@@ -86,3 +86,13 @@ CREATE TABLE order_items (
     unit_price NUMERIC(12,2) NOT NULL CHECK (unit_price > 0),
     PRIMARY KEY (order_id, product_id)
 );
+
+-- 11. Платежи (у заказа не более одного)
+CREATE TABLE payments (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    order_id BIGINT NOT NULL UNIQUE REFERENCES orders(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'failed', 'refunded')),
+    paid_at TIMESTAMPTZ,
+    CONSTRAINT chk_paid_has_date CHECK (status <> 'paid' OR paid_at IS NOT NULL)
+);
