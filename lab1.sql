@@ -96,3 +96,14 @@ CREATE TABLE payments (
     paid_at TIMESTAMPTZ,
     CONSTRAINT chk_paid_has_date CHECK (status <> 'paid' OR paid_at IS NOT NULL)
 );
+
+-- 12. Отзывы (один отзыв пользователя на товар)
+CREATE TABLE reviews (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    score INTEGER NOT NULL CHECK (score BETWEEN 1 AND 5),
+    comment TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT uq_review_user_product UNIQUE (user_id, product_id)
+);
