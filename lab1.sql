@@ -24,3 +24,15 @@ CREATE TABLE categories (
     name TEXT NOT NULL UNIQUE,
     CONSTRAINT chk_category_not_self_parent CHECK (parent_id IS NULL OR parent_id <> id)
 );
+
+-- 4. Товары
+CREATE TABLE products (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    seller_id BIGINT NOT NULL REFERENCES sellers(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT,
+    price NUMERIC(12,2) NOT NULL CHECK (price > 0),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
