@@ -36,3 +36,10 @@ CREATE TABLE products (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- 5. Складские остатки (1:1 с товаром)
+CREATE TABLE stock (
+    product_id BIGINT PRIMARY KEY REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    quantity INTEGER NOT NULL DEFAULT 0 CHECK (quantity >= 0),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
