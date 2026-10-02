@@ -43,3 +43,10 @@ CREATE TABLE stock (
     quantity INTEGER NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- 6. Корзины (у пользователя не более одной)
+CREATE TABLE carts (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
