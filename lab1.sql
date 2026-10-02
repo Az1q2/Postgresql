@@ -78,3 +78,11 @@ CREATE TABLE orders (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- 10. Позиции заказа (ассоциативная таблица M:N заказ-товар)
+CREATE TABLE order_items (
+    order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price NUMERIC(12,2) NOT NULL CHECK (unit_price > 0),
+    PRIMARY KEY (order_id, product_id)
+);
