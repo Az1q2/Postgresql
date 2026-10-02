@@ -58,3 +58,13 @@ CREATE TABLE cart_items (
     quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
     PRIMARY KEY (cart_id, product_id)
 );
+
+-- 8. Адреса
+CREATE TABLE addresses (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    city TEXT NOT NULL,
+    street TEXT NOT NULL,
+    house TEXT NOT NULL,
+    apartment TEXT
+);
