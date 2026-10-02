@@ -107,3 +107,12 @@ CREATE TABLE reviews (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     CONSTRAINT uq_review_user_product UNIQUE (user_id, product_id)
 );
+
+-- 13. Доставки (у заказа не более одной)
+CREATE TABLE deliveries (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    order_id BIGINT NOT NULL UNIQUE REFERENCES orders(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    address_id BIGINT NOT NULL REFERENCES addresses(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    delivery_status TEXT NOT NULL DEFAULT 'processing' CHECK (delivery_status IN ('processing', 'in_transit', 'delivered', 'returned')),
+    delivery_date TIMESTAMPTZ
+);
