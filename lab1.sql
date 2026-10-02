@@ -50,3 +50,11 @@ CREATE TABLE carts (
     user_id BIGINT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- 7. Позиции корзины (ассоциативная таблица M:N корзина-товар)
+CREATE TABLE cart_items (
+    cart_id BIGINT NOT NULL REFERENCES carts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
+    PRIMARY KEY (cart_id, product_id)
+);
