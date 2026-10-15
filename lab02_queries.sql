@@ -39,3 +39,15 @@ ORDER BY id;
 SELECT id, title, price
 FROM products
 ORDER BY price DESC, title ASC;
+
+-- Первая страница: 20 товаров
+SELECT id, title, price
+FROM products
+ORDER BY id
+LIMIT 20 OFFSET 0;
+
+-- Вторая страница: следующие 20 товаров
+SELECT id, title, price
+FROM products
+ORDER BY id
+LIMIT 20 OFFSET 20;
