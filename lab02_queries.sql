@@ -15,3 +15,15 @@ WHERE is_active = TRUE
       (category_id = 5 AND price <= 40000)
   )
 ORDER BY id;
+
+-- Товары в диапазоне цен от 10000 до 20000
+SELECT id, title, price
+FROM products
+WHERE price BETWEEN 10000 AND 20000
+ORDER BY id;
+
+-- Товары выбранных категорий
+SELECT id, title, category_id
+FROM products
+WHERE category_id IN (4, 5)
+ORDER BY id;
