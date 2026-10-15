@@ -115,3 +115,20 @@ SELECT
     total_amount,
     'pending'
 FROM orders;
+
+-- По одному отзыву от каждого пользователя
+INSERT INTO reviews (user_id, product_id, score, comment)
+SELECT
+    id,
+    1,
+    (id - 1) % 5 + 1,
+    'Тестовый отзыв пользователя №' || id
+FROM users;
+
+-- Доставки заказов
+INSERT INTO deliveries (order_id, address_id, delivery_status)
+SELECT
+    id,
+    user_id,
+    'processing'
+FROM orders;
