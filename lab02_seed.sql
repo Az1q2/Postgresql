@@ -88,3 +88,30 @@ SELECT
     'Учебная улица',
     'Дом ' || id
 FROM users;
+
+-- 1000 заказов, по 10 на пользователя
+INSERT INTO orders (user_id, status, total_amount)
+SELECT
+    (g - 1) % 100 + 1,
+    'new',
+    17698.34
+FROM generate_series(1, 1000) AS g;
+
+-- Одна позиция в каждом заказе
+INSERT INTO order_items (
+    order_id, product_id, quantity, unit_price
+)
+SELECT
+    id,
+    1,
+    1,
+    total_amount
+FROM orders;
+
+-- Платежи в ожидании оплаты
+INSERT INTO payments (order_id, amount, status)
+SELECT
+    id,
+    total_amount,
+    'pending'
+FROM orders;
