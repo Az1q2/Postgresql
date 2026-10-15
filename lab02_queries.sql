@@ -34,3 +34,8 @@ FROM products
 WHERE title ILIKE '%телефон%'
   AND description IS NULL
 ORDER BY id;
+
+-- По цене по убыванию, при равной цене — по названию
+SELECT id, title, price
+FROM products
+ORDER BY price DESC, title ASC;
