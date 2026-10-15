@@ -27,3 +27,10 @@ SELECT id, title, category_id
 FROM products
 WHERE category_id IN (4, 5)
 ORDER BY id;
+
+-- Телефоны без описания
+SELECT id, title, description
+FROM products
+WHERE title ILIKE '%телефон%'
+  AND description IS NULL
+ORDER BY id;
