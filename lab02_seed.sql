@@ -64,3 +64,27 @@ FROM generate_series(1, 500) AS g;
 INSERT INTO stock (product_id, quantity)
 SELECT id, 20
 FROM products;
+
+-- Корзины всех пользователей
+INSERT INTO carts (user_id)
+SELECT id
+FROM users;
+
+-- Первый товар в каждой корзине
+INSERT INTO cart_items (cart_id, product_id, quantity)
+SELECT id, 1, 1
+FROM carts;
+
+-- Второй товар в каждой корзине
+INSERT INTO cart_items (cart_id, product_id, quantity)
+SELECT id, 2, 2
+FROM carts;
+
+-- Адреса всех пользователей
+INSERT INTO addresses (user_id, city, street, house)
+SELECT
+    id,
+    'Москва',
+    'Учебная улица',
+    'Дом ' || id
+FROM users;
