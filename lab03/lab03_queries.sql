@@ -84,3 +84,47 @@ WHERE EXISTS (
     WHERE p.seller_id = s.id
 )
 ORDER BY s.id;
+
+-- CTE: сначала статистика активных товаров, затем магазины с более чем 100 такими товарами
+WITH seller_product_stats AS (
+    SELECT
+        p.seller_id,
+        COUNT(p.id) products_count,
+        AVG(p.price) avg_price
+    FROM products p
+    WHERE p.is_active = TRUE
+    GROUP BY p.seller_id
+)
+SELECT
+    s.id,
+    s.store_name,
+    stats.products_count,
+    stats.avg_price
+FROM sellers s
+INNER JOIN seller_product_stats stats ON stats.seller_id = s.id
+WHERE stats.products_count > 100
+ORDER BY stats.products_count DESC, s.id;
+
+-- Рекурсивный CTE: категория «Электроника» и все её потомки с глубиной вложенности
+WITH RECURSIVE category_tree AS (
+    SELECT
+        c.id,
+        c.parent_id,
+        c.name,
+        0 depth
+    FROM categories c
+    WHERE c.name = 'Электроника'
+
+    UNION ALL
+
+    SELECT
+        c.id,
+        c.parent_id,
+        c.name,
+        tree.depth + 1
+    FROM categories c
+    INNER JOIN category_tree tree ON c.parent_id = tree.id
+)
+SELECT id, parent_id, name, depth
+FROM category_tree
+ORDER BY depth, id;
