@@ -33,3 +33,16 @@ FROM categories c
 LEFT JOIN products p ON p.category_id = c.id
 GROUP BY c.id, c.name
 ORDER BY c.id;
+
+-- Категории со средней ценой активных товаров выше 30000: WHERE фильтрует строки, HAVING — группы
+SELECT
+    c.id,
+    c.name category,
+    COUNT(p.id) products_count,
+    AVG(p.price) avg_price
+FROM categories c
+INNER JOIN products p ON p.category_id = c.id
+WHERE p.is_active = TRUE
+GROUP BY c.id, c.name
+HAVING AVG(p.price) > 30000
+ORDER BY avg_price DESC, c.id;
