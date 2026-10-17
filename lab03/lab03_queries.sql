@@ -46,3 +46,41 @@ WHERE p.is_active = TRUE
 GROUP BY c.id, c.name
 HAVING AVG(p.price) > 30000
 ORDER BY avg_price DESC, c.id;
+
+-- Скалярный подзапрос: товары дороже средней цены по всему каталогу
+SELECT
+    p.id,
+    p.title,
+    p.price
+FROM products p
+WHERE p.price > (
+    SELECT AVG(price)
+    FROM products
+)
+ORDER BY p.price DESC, p.id;
+
+-- Подзапрос с IN: товары в дочерних категориях
+SELECT
+    p.id,
+    p.title,
+    p.category_id,
+    p.price
+FROM products p
+WHERE p.category_id IN (
+    SELECT c.id
+    FROM categories c
+    WHERE c.parent_id IS NOT NULL
+)
+ORDER BY p.id;
+
+-- Коррелированный подзапрос с EXISTS: магазины, у которых есть хотя бы один товар
+SELECT
+    s.id,
+    s.store_name
+FROM sellers s
+WHERE EXISTS (
+    SELECT 1
+    FROM products p
+    WHERE p.seller_id = s.id
+)
+ORDER BY s.id;
