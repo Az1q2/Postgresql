@@ -22,3 +22,14 @@ FROM products p
 LEFT JOIN reviews r ON r.product_id = p.id
 WHERE r.id IS NULL
 ORDER BY p.id;
+
+-- Количество товаров и средняя цена по каждой категории, включая категории без товаров
+SELECT
+    c.id,
+    c.name category,
+    COUNT(p.id) products_count,
+    AVG(p.price) avg_price
+FROM categories c
+LEFT JOIN products p ON p.category_id = c.id
+GROUP BY c.id, c.name
+ORDER BY c.id;
