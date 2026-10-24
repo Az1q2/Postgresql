@@ -34,3 +34,13 @@ FROM orders o
 JOIN order_items oi ON oi.order_id = o.id
 GROUP BY o.created_at::date
 ORDER BY day;
+
+SELECT
+    p.seller_id,
+    p.category_id,
+    SUM(p.price) AS item_revenue,
+    SUM(p.price) * 100.0 / SUM(SUM(p.price)) OVER (PARTITION BY category_id) share_pct
+
+FROM products p
+WHERE is_active = TRUE
+GROUP BY seller_id, category_id;
