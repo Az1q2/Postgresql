@@ -25,3 +25,12 @@ FROM ranked
 WHERE rn <= 3
 ORDER BY category_id, rn;
 
+SELECT
+    o.created_at::date AS day,
+    SUM(oi.quantity * oi.unit_price) AS day_revenue,
+    SUM(SUM(oi.quantity * oi.unit_price))
+        OVER (ORDER BY o.created_at::date) AS running_total
+FROM orders o
+JOIN order_items oi ON oi.order_id = o.id
+GROUP BY o.created_at::date
+ORDER BY day;
