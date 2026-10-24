@@ -59,3 +59,29 @@ SELECT
     LEAD(day_revenue) OVER (ORDER BY day) - day_revenue AS change_vs_next
 FROM daily
 ORDER BY day;
+
+WITH seller_cat AS (
+    SELECT
+        seller_id,
+        category_id,
+        SUM(price) AS item_revenue
+    FROM products
+    WHERE is_active = TRUE
+    GROUP BY seller_id, category_id
+),
+cat_total AS (
+    SELECT
+        category_id,
+        SUM(price) AS category_revenue
+    FROM products
+    WHERE is_active = TRUE
+    GROUP BY category_id
+)
+SELECT
+    s.seller_id,
+    s.category_id,
+    s.item_revenue,
+    s.item_revenue * 100.0 / c.category_revenue share_pct
+FROM seller_cat s
+JOIN cat_total c ON s.category_id = c.category_id
+ORDER BY s.category_id, share_pct DESC;
