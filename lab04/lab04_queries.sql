@@ -44,3 +44,18 @@ SELECT
 FROM products p
 WHERE is_active = TRUE
 GROUP BY seller_id, category_id;
+
+WITH daily AS (
+    SELECT o.created_at::date AS day,
+           SUM(oi.quantity * oi.unit_price) AS day_revenue
+    FROM orders o
+    JOIN order_items oi ON oi.order_id = o.id
+    GROUP BY o.created_at::date
+)
+SELECT
+    day,
+    day_revenue,
+    day_revenue - LAG(day_revenue)  OVER (ORDER BY day) AS growth_vs_prev,
+    LEAD(day_revenue) OVER (ORDER BY day) - day_revenue AS change_vs_next
+FROM daily
+ORDER BY day;
